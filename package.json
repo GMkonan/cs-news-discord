@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.3.1",
+    "@upstash/qstash": "^0.3.6",
+    "dayjs": "^1.11.9",
     "hltv": "^3.4.6",
     "next": "^13.4.2",
     "react": "18.2.0",

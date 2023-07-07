@@ -11,11 +11,11 @@ const sendToDiscord = async (content: EventPreview[]) => {
     date: content[0]?.dateStart,
   };
 
-  const finalContent = `GRITA CHELO! Nossa grande FURIA vai estar na ${
+  const finalContent = `**GRITA CHELO!** Nossa grande FURIA vai estar na **${
     formmatedFirstEvent.title || ""
-  } Data: ${
+  }** Data: **${
     dayjs(formmatedFirstEvent.date || 0).format("DD/MM/YYYY") || ""
-  } Vamo la apoiar o fall... furia?`;
+  }** Vamo la apoiar o fall... furia?`;
 
   return fetch(env.DISCORD_WEBHOOK, {
     method: "post",

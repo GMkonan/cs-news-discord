@@ -24,9 +24,11 @@ const sendToDiscord = async (
   }** Data: **${
     dayjs(formmatedFirstEvent.dateStart || 0).format("DD/MM/YYYY") || ""
   }** ate **${dayjs(formmatedFirstEvent.dateEnd || 0).format("DD/MM/YYYY")}** \n
-  Jogo: **${formmatedFirstEvent.team1} VS ${formmatedFirstEvent.team2} ${
-    formmatedFirstEvent.gameFormat
-  }**
+  Jogo: ${
+    formmatedFirstEvent.team1
+      ? `**${formmatedFirstEvent.team1} VS ${formmatedFirstEvent.team2}`
+      : "**TBD**"
+  } ${formmatedFirstEvent.gameFormat}**
   Vamo la apoiar o fall... furia?`;
 
   return fetch(env.DISCORD_WEBHOOK, {

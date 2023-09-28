@@ -5,6 +5,8 @@ Torcendo para a furia porque agora o fallen ta lá
 - https://github.com/gigobyte/HLTV
 - DayJS form simple date formats
 
+https://discohook.org/
+https://gist.github.com/Birdie0/78ee79402a4301b1faf412ab5f1cdcf9
 
 #### .env Format
 ``` 

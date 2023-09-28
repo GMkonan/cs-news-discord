@@ -19,17 +19,17 @@ const sendToDiscord = async (
   };
 
   // array with different stuff?
-  const finalContent = `**Compra 2 AWP abre a live que hoje tem clutch do fallen** Nossa FURIA vai estar na **${
-    formmatedFirstEvent.title || ""
-  }** Data: **${
-    dayjs(formmatedFirstEvent.dateStart || 0).format("DD/MM/YYYY") || ""
-  }** ate **${dayjs(formmatedFirstEvent.dateEnd || 0).format("DD/MM/YYYY")}** \n
-  Jogo: ${
-    formmatedFirstEvent.team1
-      ? `**${formmatedFirstEvent.team1} VS ${formmatedFirstEvent.team2}`
-      : "**TBD**"
-  } ${formmatedFirstEvent.gameFormat}**
-  Vamo la apoiar o fall... furia?`;
+  // const finalContent = `**Compra 2 AWP abre a live que hoje tem clutch do fallen** Nossa FURIA vai estar na **${
+  //   formmatedFirstEvent.title || ""
+  // }** Data: **${
+  //   dayjs(formmatedFirstEvent.dateStart || 0).format("DD/MM/YYYY") || ""
+  // }** ate **${dayjs(formmatedFirstEvent.dateEnd || 0).format("DD/MM/YYYY")}** \n
+  // Jogo: ${
+  //   formmatedFirstEvent.team1
+  //     ? `**${formmatedFirstEvent.team1} VS ${formmatedFirstEvent.team2}`
+  //     : "**TBD**"
+  // } ${formmatedFirstEvent.gameFormat}**
+  // Vamo la apoiar o fall... furia?`;
 
   return fetch(env.DISCORD_WEBHOOK, {
     method: "post",
@@ -37,7 +37,41 @@ const sendToDiscord = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      content: finalContent,
+      content: "Tá ai as informações do proximo evento:",
+      embed: [
+        {
+          author: {
+            name: "FURIA",
+            url: "https://www.hltv.org/team/8297/furia",
+            icon_url:
+              "https://img-cdn.hltv.org/teamlogo/mvNQc4csFGtxXk5guAh8m1.svg?ixlib=java-2.1.0&s=11e5056829ad5d6c06c5961bbe76d20c",
+          },
+          title: "Compra 2 AWP abre a live que hoje tem clutch do fallen",
+          description: `Nossa FURIA vai estar na **${
+            formmatedFirstEvent.title || ""
+          }** Data: **${
+            dayjs(formmatedFirstEvent.dateStart || 0).format("DD/MM/YYYY") || ""
+          }** ate **${dayjs(formmatedFirstEvent.dateEnd || 0).format(
+            "DD/MM/YYYY"
+          )}**`,
+          fields: [
+            {
+              name: `**Jogo (Formato ${formmatedFirstEvent.gameFormat})**`,
+              value: "",
+            },
+            {
+              name: `${formmatedFirstEvent.team1 || "TBD"}`,
+              value: "Time 1",
+              inline: true,
+            },
+            {
+              name: `${formmatedFirstEvent.team2 || "TBD"}`,
+              value: "Time 2",
+              inline: true,
+            },
+          ],
+        },
+      ],
     }),
   });
 };

@@ -38,7 +38,7 @@ const sendToDiscord = async (
     },
     body: JSON.stringify({
       content: "Tá ai as informações do proximo evento:",
-      embed: [
+      embeds: [
         {
           author: {
             name: "FURIA",

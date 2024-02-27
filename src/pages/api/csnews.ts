@@ -1,13 +1,35 @@
-import dayjs from "dayjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { verifySignature } from "@upstash/qstash/nextjs";
 import { getTeamNextGameInfo } from "~/utils/getTeamNextGameInfo";
-import { type DiscordMessageT, sendDiscordMsg } from "~/utils/sendDiscordMsg";
-import { MESSAGE_DATA } from "~/data/message-data";
+import { sendDiscordMsg } from "~/utils/sendDiscordMsg";
+import createMessage from "~/utils/createMessage";
+
+export type FormattedEventT = {
+  title: string;
+  dateStart: number;
+  dateEnd: number;
+  team1: string;
+  team2: string;
+  gameFormat: string;
+};
+
+export type TeamT = {
+  id: number;
+  name: string;
+  logo: string | undefined;
+  url: string;
+};
 
 const csNews = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!req.query.team)
+    return res.status(404).json({ message: "No team name provided" });
+
+  const teamName = req.query.team as string;
+
   // get team name from params
-  const { matchDetails, event } = await getTeamNextGameInfo("FURIA");
+  const { team, matchDetails, event } = await getTeamNextGameInfo(teamName);
+
+  if (!team) return res.status(404).json({ message: "No team found" });
 
   if (!matchDetails || !event)
     return res.status(404).json({ message: "No events for this Team" });
@@ -21,49 +43,13 @@ const csNews = async (req: NextApiRequest, res: NextApiResponse) => {
     gameFormat: matchDetails[0]?.format || "",
   };
 
-  // could be a "format msg" function or just the value directly
-  const message: DiscordMessageT = {
-    content: MESSAGE_DATA.content,
-    embeds: [
-      {
-        title: MESSAGE_DATA.title,
-        author: {
-          // this should be automatically generated
-          name: "FURIA",
-          url: "https://www.hltv.org/team/8297/furia",
-          icon_url:
-            "https://img-cdn.hltv.org/teamlogo/mvNQc4csFGtxXk5guAh8m1.svg?ixlib=java-2.1.0&s=11e5056829ad5d6c06c5961bbe76d20c",
-        },
-        description: `Campeonato **${
-          formmatedFirstEvent.title || ""
-        }** Data: **${
-          dayjs(formmatedFirstEvent.dateStart || 0).format("DD/MM/YYYY") || ""
-        }** ate **${dayjs(formmatedFirstEvent.dateEnd || 0).format(
-          "DD/MM/YYYY"
-        )}**`,
-        fields: [
-          {
-            name: `**Jogo (Formato ${formmatedFirstEvent.gameFormat})**`,
-            value: "",
-          },
-          {
-            name: `${formmatedFirstEvent.team1 || "TBD"}`,
-            value: "Time 1",
-            inline: true,
-          },
-          {
-            name: `${formmatedFirstEvent.team2 || "TBD"}`,
-            value: "Time 2",
-            inline: true,
-          },
-        ],
-      },
-    ],
-  };
+  const message = createMessage(team, formmatedFirstEvent);
 
-  await sendDiscordMsg(message);
+  return await sendDiscordMsg(message)
+    .then(() => res.status(200).json(message))
+    .catch((err) => res.status(500).json(err));
 
-  return res.status(200).json(message);
+  // return res.status(200).json(message);
 };
 
 export default verifySignature(csNews);

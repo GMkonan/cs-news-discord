@@ -25,7 +25,7 @@ const csNews = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).json({ message: "No team name provided" });
 
   const teamName = req.query.team as string;
-
+  console.log(teamName);
   // get team name from params
   const { team, matchDetails, event } = await getTeamNextGameInfo(teamName);
 
